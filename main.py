@@ -30,7 +30,9 @@ def apply_nsupdate(nsupdate: str):
         f.write(nsupdate)
 
     process = Popen(
-        ["nsupdate", "-l", tmp.name], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        ["nsupdate", "-k", "/run/named/session.key", tmp.name],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     stdout, stderr = process.communicate()
 
@@ -43,6 +45,7 @@ async def update_zone_record(query: Query):
         return
 
     nsupdate = """
+server dns
 zone {zone}
 update delete {record}. {record_type}
 update add {record}. {ttl} {record_type} {value}
@@ -66,6 +69,7 @@ async def delete_zone_record(query: Query):
         return
 
     nsupdate = """
+server dns
 zone {zone}
 update delete {record}. {record_type}
 show
