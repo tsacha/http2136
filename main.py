@@ -4,9 +4,9 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from subprocess import Popen
 from uuid import uuid4
 from os import environ
+import subprocess
 
 
 class Query(BaseModel):
@@ -29,7 +29,7 @@ def apply_nsupdate(nsupdate: str):
     with open(tmp.name, "w") as f:
         f.write(nsupdate)
 
-    process = Popen(
+    process = subprocess.Popen(
         ["nsupdate", "-k", "/run/named/session.key", tmp.name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -41,7 +41,7 @@ def apply_nsupdate(nsupdate: str):
 
 @app.put("/")
 async def update_zone_record(query: Query):
-    if query.token != TOKEN:
+    if query.token != token:
         return
 
     nsupdate = """
