@@ -65,7 +65,7 @@ send
 
 @app.delete("/")
 async def delete_zone_record(query: Query):
-    if query.token != TOKEN:
+    if query.token != token:
         return
 
     nsupdate = """
