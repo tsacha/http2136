@@ -9,4 +9,4 @@ RUN \
    pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 
-CMD uvicorn --host '' --port 8000 --proxy-headers main:app
+CMD ["fastapi", "run", "main.py", "--host", "", "--port", "8000"]
