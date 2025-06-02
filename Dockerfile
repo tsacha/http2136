@@ -1,12 +1,10 @@
-FROM python:latest
-    MAINTAINER Sacha Trémoureux <sacha@tremoureux.fr>
+FROM alpine:latest
 
 WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN \
-   apt -y update && \
-   apt -y --no-install-recommends install dnsutils && \
-   pip install --no-cache-dir -r requirements.txt
+   apk add -u --no-cache bind-tools python3 py3-pip && \
+   pip install --no-cache-dir --break-system-packages -r requirements.txt
 COPY main.py .
 
 CMD ["fastapi", "run", "main.py", "--host", "", "--port", "8000"]
